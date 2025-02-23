@@ -1,0 +1,74 @@
+.coin-flip-game {
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.points-display {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.choice-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.choice-btn {
+  padding: 0.8rem 1.5rem;
+  border: 2px solid #ddd;
+  border-radius: 0.5rem;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.choice-btn.selected {
+  border-color: #000;
+  background-color: #000;
+  color: #fff;
+}
+
+.choice-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.flip-button {
+  padding: 0.8rem 2rem;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.flip-button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+.flip-button:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+.result-display {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+}
+
+.result-text {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #333;
+}

@@ -1,0 +1,36 @@
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.workout-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.workout-card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.workout-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.workout-points {
+  color: #4caf50;
+  font-weight: bold;
+}

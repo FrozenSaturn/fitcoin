@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Portfolio</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- Animated Background -->
+    <div class="animated-background">
+      <div class="cube"></div>
+      <div class="cube"></div>
+      <div class="cube"></div>
+      <div class="cube"></div>
+      <div class="cube"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+      <!-- Header Section -->
+      <header class="header">
+        <div class="logo">SJM Portfolio</div>
+        <nav class="nav">
+          <div class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <ul class="nav-links">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <!-- Hero Section -->
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <div class="hero-text">
+            <h1 class="glitch-text" data-text="Creative Developer">
+              Creative Developer
+            </h1>
+            <div class="typing-container">
+              <span class="typing"></span>
+            </div>
+            <p class="hero-description">
+              Crafting digital experiences with code and creativity
+            </p>
+            <div class="cta-buttons">
+              <a href="/login" class="btn primary">Sign In</a>
+              <a href="/signup" class="btn secondary">Sign Up</a>
+            </div>
+          </div>
+          <div class="hero-image">
+            <div class="circle-container">
+              <div class="circle"></div>
+              <img
+                src="https://i.imgur.com/T7Am8ag.jpeg?w=500&h=500&fit=crop"
+                alt="Profile"
+                class="profile-img"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Work Section -->
+      <section id="work" class="work">
+        <h2 class="section-title">Featured Work</h2>
+        <div class="work-grid">
+          <div class="work-card">
+            <div class="work-image">
+              <img
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&h=300&fit=crop"
+                alt="Project 1"
+              />
+            </div>
+            <div class="work-content">
+              <h3>Project One</h3>
+              <p>Web Development</p>
+              <a href="#" class="btn small">View Project</a>
+            </div>
+          </div>
+          <div class="work-card">
+            <div class="work-image">
+              <img
+                src="https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=500&h=300&fit=crop"
+                alt="Project 2"
+              />
+            </div>
+            <div class="work-content">
+              <h3>Project Two</h3>
+              <p>UI/UX Design</p>
+              <a href="#" class="btn small">View Project</a>
+            </div>
+          </div>
+          <div class="work-card">
+            <div class="work-image">
+              <img
+                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500&h=300&fit=crop"
+                alt="Project 3"
+              />
+            </div>
+            <div class="work-content">
+              <h3>Project Three</h3>
+              <p>App Development</p>
+              <a href="#" class="btn small">View Project</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about" class="about">
+        <h2 class="section-title">About Me</h2>
+        <div class="about-content">
+          <div class="skills">
+            <div class="skill-card">
+              <div class="skill-title">Web Development</div>
+              <div class="skill-bar">
+                <div class="skill-progress" data-progress="90"></div>
+              </div>
+            </div>
+            <div class="skill-card">
+              <div class="skill-title">UI/UX Design</div>
+              <div class="skill-bar">
+                <div class="skill-progress" data-progress="85"></div>
+              </div>
+            </div>
+            <div class="skill-card">
+              <div class="skill-title">Mobile Development</div>
+              <div class="skill-bar">
+                <div class="skill-progress" data-progress="75"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="contact">
+        <h2 class="section-title">Get in Touch</h2>
+        <div class="contact-container">
+          <form class="contact-form">
+            <div class="form-group">
+              <input type="text" required />
+              <label>Name</label>
+              <span class="line"></span>
+            </div>
+            <div class="form-group">
+              <input type="email" required />
+              <label>Email</label>
+              <span class="line"></span>
+            </div>
+            <div class="form-group">
+              <textarea required></textarea>
+              <label>Message</label>
+              <span class="line"></span>
+            </div>
+            <button type="submit" class="btn primary">Send Message</button>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+  <script>
+    // Handle navigation to React routes
+    document.addEventListener("click", (e) => {
+      const anchor = e.target.closest('a[href^="/"]');
+      if (anchor && anchor.href.startsWith(window.location.origin + "/#")) {
+        e.preventDefault();
+        window.location.href = anchor.href.replace("/#", "/");
+      }
+    });
+  </script>
+</html>
