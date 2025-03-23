@@ -23,26 +23,49 @@ const LogWorkoutSection: React.FC = () => {
 
     try {
       const workoutData = await parseWorkoutText(input);
-      if (!workoutData) throw new Error("AI parsing failed");
+      console.log("Raw AI Response:", workoutData);
 
-      // Use the points provided by the AI output
-      const points = workoutData.points;
+      if (!workoutData || typeof workoutData !== "object") {
+        throw new Error("AI returned invalid format");
+      }
 
-      await addDoc(
-        collection(db, "users", auth.currentUser?.uid as string, "workouts"),
-        {
-          ...workoutData,
-          timestamp: serverTimestamp(),
+      const validatedData = {
+        workoutName: workoutData.workoutName || "Unknown Exercise",
+        durationMinutes: Number(workoutData.durationMinutes) || 0,
+        caloriesBurned: Number(workoutData.caloriesBurned) || 0,
+        points: Number(workoutData.points) || 0,
+        metrics: workoutData.metrics || [],
+      };
+
+      if (
+        validatedData.durationMinutes <= 0 ||
+        validatedData.caloriesBurned <= 0
+      ) {
+        throw new Error("Invalid duration or calories values");
+      }
+
+      const userId = auth.currentUser?.uid;
+      if (!userId) throw new Error("User not authenticated");
+
+      const requiredFields = ["durationMinutes", "caloriesBurned", "points"];
+      requiredFields.forEach((field) => {
+        if (typeof workoutData[field] === "undefined") {
+          throw new Error(`Missing required field: ${field}`);
         }
-      );
+      });
+
+      await addDoc(collection(db, "users", userId, "workouts"), {
+        ...workoutData,
+        timestamp: serverTimestamp(),
+      });
 
       setMessages([
         ...newMessages,
         {
           content: `🏋️ ${workoutData.workoutName} (${workoutData.durationMinutes} min)
-🔥 ${workoutData.caloriesBurned} calories (+${points} pts)`,
+🔥 ${workoutData.caloriesBurned} calories (+${workoutData.points} pts)`,
           isUser: false,
-          points,
+          points: workoutData.points,
         },
       ]);
     } catch (error) {
@@ -51,7 +74,9 @@ const LogWorkoutSection: React.FC = () => {
         ...newMessages,
         {
           content:
-            "❌ Failed to log workout. Please check your input or try again.",
+            error instanceof Error
+              ? `❌ ${error.message}`
+              : "❌ Failed to log workout. Please check your input format",
           isUser: false,
         },
       ]);

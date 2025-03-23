@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import "./Signup.css"; // Importing the CSS file
 
-const Signup: React.FC = () => {
+interface SignupProps {
+  navigate: (path: string) => void;
+}
+
+const Signup: React.FC<SignupProps> = ({ navigate }) => {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate(); // Using the hook instead of expecting a prop
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();

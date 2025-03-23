@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import "./landing_page/styles.css"; // Ensure your CSS is available here (moved from public/landing_page/styles.css)
 
-const LandingPage: React.FC = () => {
+// Add interface
+interface LandingPageProps {
+  navigate: (path: string) => void;
+}
+
+const LandingPage: React.FC<LandingPageProps> = ({ navigate }) => {
   useEffect(() => {
     // Typing Animation
     const typingText = document.querySelector(".typing");
@@ -102,7 +107,6 @@ const LandingPage: React.FC = () => {
       let current = "";
       sections.forEach((section) => {
         const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
         if (window.scrollY >= sectionTop - 300) {
           current = section.getAttribute("id") || "";
         }
@@ -195,12 +199,18 @@ const LandingPage: React.FC = () => {
                 experience
               </p>
               <div className="cta-buttons">
-                <a href="/login" className="btn primary">
+                <button
+                  className="btn primary"
+                  onClick={() => navigate("/login")}
+                >
                   Sign In
-                </a>
-                <a href="/signup" className="btn secondary">
+                </button>
+                <button
+                  className="btn secondary"
+                  onClick={() => navigate("/signup")}
+                >
                   Sign Up
-                </a>
+                </button>
               </div>
             </div>
             <div className="hero-image">

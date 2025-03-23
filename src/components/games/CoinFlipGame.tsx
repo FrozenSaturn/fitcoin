@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  doc,
   onSnapshot,
-  runTransaction,
   collection,
   addDoc,
   serverTimestamp,

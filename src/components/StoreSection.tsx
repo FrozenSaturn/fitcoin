@@ -7,6 +7,8 @@ import {
   doc,
   getDoc,
   deleteDoc,
+  setDoc,
+  increment,
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import "./StoreSection.css"; // Import the new CSS file
@@ -158,11 +160,27 @@ const StoreSection: React.FC = () => {
     }
 
     try {
-      // Delete all items from the "cart" collection to simulate a successful checkout
+      // Calculate points to deduct (1000 points = $50)
+      const pointsToDeduct = totalCost * 20;
+
+      // Update user's spent points
+      if (auth.currentUser) {
+        const userDocRef = doc(db, "users", auth.currentUser.uid);
+        await setDoc(
+          userDocRef,
+          {
+            spentPoints: increment(pointsToDeduct),
+          },
+          { merge: true }
+        );
+      }
+
+      // Delete cart items
       const cartSnapshot = await getDocs(collection(db, "cart"));
-      cartSnapshot.docs.forEach(async (docItem) => {
-        await deleteDoc(docItem.ref);
-      });
+      await Promise.all(
+        cartSnapshot.docs.map((docItem) => deleteDoc(docItem.ref))
+      );
+
       alert("Purchase successful!");
     } catch (error) {
       console.error("Error during checkout: ", error);

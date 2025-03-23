@@ -1,9 +1,12 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI("AIzaSyCGbVmjf_eAk59VaywjUyZv6TjDHum-5YU"); // ⚠️ Directly paste key
+const genAI = new GoogleGenerativeAI("AIzaSyCHiuRpmb7zHec-9LI1gQYDpEJW4m1Jb4Q");
+
+console.log("Environment Mode:", import.meta.env.MODE);
 
 export async function parseWorkoutText(text: string) {
-  const prompt = `You are a workout parser. Given the following workout description, extract and calculate details and output a valid JSON object without any additional text or commentary. The JSON object must have the following keys:
+  try {
+    const prompt = `You are a workout parser. Given the following workout description, extract and calculate details and output a valid JSON object without any additional text or commentary. The JSON object must have the following keys:
 
 - "workoutName": string (the main workout activity, e.g., "Running", "Pushups")
 - "intensity": string ("low", "medium", or "high")
@@ -44,16 +47,53 @@ Possible output:
 
 Now, parse this workout description: "${text}"`;
 
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash-latest",
+      systemInstruction:
+        "You are a fitness data parser that only returns valid JSON",
+    });
     const result = await model.generateContent(prompt);
     const response = await result.response.text();
-    // Look for the first '{' in case of any extra characters before the JSON
-    const jsonStart = response.indexOf("{");
-    const jsonStr = response.substring(jsonStart).trim();
-    return JSON.parse(jsonStr);
+    console.log("Raw AI Response:", response); // Debug logging
+
+    // Improved JSON extraction
+    const jsonStr = response
+      .replace(/```json/g, "") // Remove markdown code blocks
+      .replace(/```/g, "")
+      .trim();
+
+    if (!jsonStr) throw new Error("Empty response from AI");
+
+    const parsed = JSON.parse(jsonStr);
+
+    // Validate required fields
+    const requiredFields = [
+      "workoutName",
+      "durationMinutes",
+      "caloriesBurned",
+      "points",
+    ];
+    const missingFields = requiredFields.filter((field) => !(field in parsed));
+
+    if (missingFields.length > 0) {
+      throw new Error(`Missing required fields: ${missingFields.join(", ")}`);
+    }
+
+    // Type validation
+    const numberFields = ["durationMinutes", "caloriesBurned", "points"];
+    const invalidNumbers = numberFields.filter(
+      (field) => typeof parsed[field] !== "number" || isNaN(parsed[field])
+    );
+
+    if (invalidNumbers.length > 0) {
+      throw new Error(`Invalid number values in: ${invalidNumbers.join(", ")}`);
+    }
+
+    return parsed;
   } catch (error) {
-    console.error("AI Parse Error:", error);
-    return null;
+    console.error("Gemini API Error:", error);
+    throw new Error(
+      `API Error: ${error instanceof Error ? error.message : "Unknown error"}`
+    );
   }
 }

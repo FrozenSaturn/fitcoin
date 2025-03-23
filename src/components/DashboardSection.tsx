@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
-import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  getDocs,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { db, auth } from "../firebase";
 
 type Workout = {
@@ -21,6 +27,7 @@ type FirestoreWorkout = Workout & { id: string };
 const DashboardSection: React.FC = () => {
   const [workouts, setWorkouts] = useState<FirestoreWorkout[]>([]);
   const [loading, setLoading] = useState(true);
+  const [spentPoints] = useState<number>(0);
 
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -44,23 +51,30 @@ const DashboardSection: React.FC = () => {
     fetchWorkouts();
   }, []);
 
-  const totalPoints = workouts.reduce(
-    (sum, workout) => sum + workout.points,
+  const totalWorkoutPoints = workouts.reduce(
+    (sum, workout) => sum + (Number(workout.points) || 0),
     0
   );
 
-  const purchaseLimit = (totalPoints / 1000) * 50;
+  const totalPoints = Math.max(
+    Number(totalWorkoutPoints) - Number(spentPoints),
+    0
+  );
+
+  const purchaseLimit = ((Number(totalPoints) || 0) / 1000) * 50;
 
   useEffect(() => {
     if (auth.currentUser) {
       const userDocRef = doc(db, "users", auth.currentUser.uid);
-      setDoc(userDocRef, { purchaseLimit: purchaseLimit }, { merge: true })
-        .then(() => {
-          console.log("User purchase limit updated in Firestore");
-        })
-        .catch((error) => {
-          console.error("Error updating purchase limit:", error);
-        });
+      if (!isNaN(purchaseLimit)) {
+        setDoc(userDocRef, { purchaseLimit: purchaseLimit }, { merge: true })
+          .then(() => {
+            console.log("User purchase limit updated in Firestore");
+          })
+          .catch((error) => {
+            console.error("Error updating purchase limit:", error);
+          });
+      }
     }
   }, [totalPoints, purchaseLimit]);
 
@@ -68,9 +82,12 @@ const DashboardSection: React.FC = () => {
     <div className="dashboard-container">
       <div className="stats-header">
         <h2>Activity History</h2>
-        <div className="total-points">Total Points: {totalPoints}</div>
+        <div className="total-points">
+          Total Points: {isNaN(totalPoints) ? 0 : totalPoints}
+        </div>
         <div className="purchase-limit">
-          Purchase Limit: ${purchaseLimit.toFixed(2)}
+          Purchase Limit: $
+          {(isNaN(purchaseLimit) ? 0 : purchaseLimit).toFixed(2)}
         </div>
       </div>
 

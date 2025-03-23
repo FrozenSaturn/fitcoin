@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  updateDoc,
-  doc,
-  increment,
   onSnapshot,
   collection,
   addDoc,

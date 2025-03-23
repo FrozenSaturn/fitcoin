@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import {
   signInWithEmailAndPassword,
@@ -8,8 +7,12 @@ import {
 } from "firebase/auth";
 import "./Login.css"; // Importing the CSS file
 
-const Login: React.FC = () => {
-  const navigate = useNavigate();
+// Add this interface at the top
+interface LoginProps {
+  navigate: (path: string) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ navigate }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);

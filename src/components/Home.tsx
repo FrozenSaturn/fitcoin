@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import LogWorkoutSection from "./LogWorkoutSection";
 import DashboardSection from "./DashboardSection";
@@ -7,8 +6,12 @@ import PurchaseSection from "./PurchaseSection";
 import GamesSection from "./GamesSection";
 import StoreSection from "./StoreSection";
 
-const Home: React.FC = () => {
-  const navigate = useNavigate();
+// Add interface
+interface HomeProps {
+  navigate: (path: string) => void;
+}
+
+const Home: React.FC<HomeProps> = ({ navigate }) => {
   const [currentSection, setCurrentSection] = useState<
     "log" | "dashboard" | "games" | "products" | "store"
   >("log");
